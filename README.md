@@ -35,3 +35,70 @@ where:
 3. **Phase III (Physical Constraints)**: Numerical underflows are clipped to a positive floor ($P_a \ge 10^{-12}$) and global total probability is scaled to enforce $\sum_a \int_{\Omega} P_a \, \mathrm{d}x = 3$.
 
 ---
+
+## 3. Execution & Usage
+
+Run standalone solver with terminal diagnostic logs:
+
+    python fokker_plank_coupled_solver_1D.py
+
+Generate static plots of final distribution profiles:
+
+    python fokker_plank_coupled_plot.py
+
+Run interactive real-time animation of time evolution:
+
+    python fokker_plank_coupled_animated_plot.py
+
+---
+
+## 4. Parameter Configuration & Customization
+
+All physical, numerical, and initial parameters are defined inside the `run_simulation()` function in `fokker_plank_coupled_solver_1D.py`:
+
+### a) Grid & Integration Parameters
+
+    Nx = 100               # Spatial grid resolution (number of nodes)
+    x_vals = [0, 10]       # Spatial domain range [x_min, x_max]
+    dt = 0.0004            # Time step size (seconds, satisfies CFL bound)
+    t_final = 1.0          # Total simulation time (seconds)
+
+### b) Gauge Coupling Parameter
+
+    g = 0.2                # Interaction strength (g = 0.0 for uncoupled)
+
+### c) Drift Velocity Fields $v_a(x)$
+
+Arbitrary spatially dependent functions defined per sector.
+Examples (Linear Ornstein-Uhlenbeck drift $v_a(x) = \alpha_a x$):
+
+    drift_funcs = [
+        lambda x: 0.3 * x,   # Sector 1 drift
+        lambda x: 0.5 * x,   # Sector 2 drift
+        lambda x: 0.7 * x    # Sector 3 drift
+    ]
+
+### d) Diffusion Coefficients $D_a$
+
+Arbitrary positive scalar constants defined per sector.
+
+    diff_coeffs = [0.10, 0.15, 0.20]  # [D_1, D_2, D_3]
+
+### e) Initial Conditions $P_a(x,0)$
+
+Arbitrary non-negative distribution profiles normalized to unit area.
+Example (Identical unit Gaussians centered at $x = 5.0$):
+
+    Ps = [init_gauss_1d(x_vals, cx=5.0, width=1.0, dx=dx) for _ in range(3)]
+
+---
+
+## 5. Citation
+
+If you use this codebase in your research, please cite:
+
+    @article{DeCosmo2026,
+      author  = {De Cosmo, Francesco Pio and Di Natale, Gianluca and Cieri, Leandro},
+      title   = {A Gauge-Inspired Coupled Fokker--Planck System for Multistate Stochastic Dynamics: Formalism and 1-D Numerical Implementation},
+      year    = {2026}
+    }
