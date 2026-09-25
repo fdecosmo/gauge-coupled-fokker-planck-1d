@@ -7,8 +7,8 @@ Companion codebase for research manuscript:
 
 ## 1. Repository Files
 
-* `fokker_plank_coupled_solver_1D.py`: Core numerical solver engine implementing the Inverted Operator-Splitting scheme and MPDATA advective transport algorithm.
-* `fokker_plank_coupled_plot.py`: Post-processing visualization script to display static initial/final probability distribution profiles and diagnostic force breakdown.
+* `fokker_plank_coupled_solver_1D.py`: Core numerical solver engine implementing the coupled fokker-plank system using an operator-splitting scheme and MPDATA advective transport algorithm.
+* `fokker_plank_coupled_plot.py`: Post-processing visualization script to display static initial/final probability distribution profiles and diagnostic.
 * `fokker_plank_coupled_animated_plot.py`: Interactive visualization script generating real-time animations of the temporal evolution of all coupled probability sectors.
 
 ---
@@ -21,18 +21,12 @@ $$\frac{\partial P_a}{\partial t} = -\frac{\partial}{\partial x} \left[ v_a(x) P
 
 where:
 * $P_a(x,t)$: Probability density distribution of sector $a$.
-* $v_a(x)$: Spatially dependent deterministic drift velocity field.
+* $v_a(x)$: Spatially dependent drift function.
 * $D_a$: Constant diffusion coefficient for sector $a$.
 * $J_a(x,t)$: Local physical probability current density, defined as:
   $$J_a(x,t) = v_a(x) P_a(x,t) - D_a \frac{\partial P_a(x,t)}{\partial x}$$
 * $I_a(x,t)$: Non-local gauge coupling source term containing spatial domain integrals ($\Gamma$) and time-memory accumulators ($\Theta$).
 * $g$: Global non-Abelian $SU(2)$ gauge coupling constant. Setting $g = 0.0$ recovers uncoupled Fokker-Planck evolution.
-
-### Numerical Strategy (Inverted Operator-Splitting + MPDATA)
-
-1. **Phase I (Pre-conditioning)**: Physical spatial diffusion and non-local gauge interaction source terms ($\mathcal{O}(g)$ and $\mathcal{O}(g^2)$) are integrated to generate an intermediate pre-conditioned state $\widetilde{P}_a$.
-2. **Phase II (Advective Transport)**: Pure advective transport under drift velocity $v_a(x)$ is resolved using the two-step MPDATA scheme (Donor-Cell upwinding followed by an antidiffusive pseudo-velocity correction).
-3. **Phase III (Physical Constraints)**: Numerical underflows are clipped to a positive floor ($P_a \ge 10^{-12}$) and global total probability is scaled to enforce $\sum_a \int_{\Omega} P_a \, \mathrm{d}x = 3$.
 
 ---
 
@@ -67,7 +61,7 @@ All physical, numerical, and initial parameters are defined inside the `run_simu
 
     g = 0.2                # Interaction strength (g = 0.0 for uncoupled)
 
-### c) Drift Velocity Fields $v_a(x)$
+### c) Drift functions $v_a(x)$
 
 Arbitrary spatially dependent functions defined per sector.
 Examples (Linear Ornstein-Uhlenbeck drift $v_a(x) = \alpha_a x$):
@@ -87,7 +81,7 @@ Arbitrary positive scalar constants defined per sector.
 ### e) Initial Conditions $P_a(x,0)$
 
 Arbitrary non-negative distribution profiles normalized to unit area.
-Example (Identical unit Gaussians centered at $x = 5.0$):
+Example (Gaussians centered at $x = 5.0$):
 
     Ps = [init_gauss_1d(x_vals, cx=5.0, width=1.0, dx=dx) for _ in range(3)]
 
