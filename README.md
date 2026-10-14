@@ -92,7 +92,12 @@ Example (Gaussians centered at $x = 5.0$):
 If you use this codebase in your research, please cite:
 
     @article{DeCosmo2026,
-      author  = {De Cosmo, Francesco Pio and Di Natale, Gianluca and Cieri, Leandro},
-      title   = {A Gauge-Inspired Coupled Fokker--Planck System for Multistate Stochastic Dynamics: Formalism and 1-D Numerical Implementation},
-      year    = {2026}
+    author        = {De Cosmo, Francesco Pio and Di Natale, Gianluca and Cieri, Leandro}, 
+    title         = {A Gauge-Inspired Coupled {Fokker--Planck} System for Multistate Stochastic Dynamics: Formalism and {1-D} Numerical Implementation},
+    journal       = {arXiv preprint arXiv:2610.14052},
+    eprint        = {2610.14052},
+    archiveprefix = {arXiv},
+    primaryclass  = {physics.comp-ph},
+    year          = {2026},
+    doi           = {10.48550/arXiv.2610.14052}
     }
